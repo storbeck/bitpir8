@@ -12,6 +12,7 @@
 </header>
 
 <section id="blog-posts">
+    
     <article>
         <header>
             <h2>Masscan's User-Space TCP/IP Stack Explained</h2>
@@ -49,6 +50,64 @@
         </ul>
         <p>In conclusion, Masscan's user-space TCP/IP stack is a pivotal feature enabling its fast scanning capabilities. While introducing complexity and resource management considerations, the benefits in speed and control offer substantial advantages for network reconnaissance and security auditing.</p>
     </article>
+    <article>
+        <header>
+            <h2>Pseudocode Exploration</h2>
+        </header>
+        <p>Building upon our understanding of Masscan's user-space TCP/IP stack, let's explore a simplified pseudocode example that illustrates the core functionalities enabling its high-speed network scanning capabilities.</p>
+        
+        <h3>Pseudocode Breakdown</h3>
+        <p>The following pseudocode segments offer insight into how Masscan efficiently crafts, sends, and listens for packets, leveraging a user-space stack for unparalleled speed and flexibility in network scanning:</p>
+        
+        <h4>Setting Up the Scanner</h4>
+        <pre><code>
+    function setupScanner(targetIPs, portRange, rate):
+        for each IP in targetIPs:
+            for each port in portRange:
+                schedulePacketSend(IP, port, rate)
+        </code></pre>
+        
+        <h4>Crafting and Sending Packets</h4>
+        <pre><code>
+    function schedulePacketSend(IP, port, rate):
+        while true:
+            wait 1/rate seconds
+            sendPacket(IP, port)
+    
+    function sendPacket(IP, port):
+        packet = createPacket(IP, port)
+        rawSocket.send(packet)
+        log("Packet sent to " + IP + ":" + port)
+    
+    function createPacket(IP, port):
+        packet = new Packet()
+        packet.destinationIP = IP
+        packet.destinationPort = port
+        packet.flags = SYN
+        return packet
+        </code></pre>
+        
+        <h4>Listening for Responses</h4>
+        <pre><code>
+    function listenForResponses():
+        while true:
+            response = rawSocket.receive()
+            if response is not None:
+                if response.flags == SYN-ACK:
+                    log("Port " + response.sourcePort + " on " + response.sourceIP + " is open")
+                else if response.flags == RST:
+                    log("Port " + response.sourcePort + " on " + response.sourceIP + " is closed")
+        </code></pre>
+        
+        <h3>Understanding the Core Concepts</h3>
+        <p>This pseudocode outlines the fundamental operations of Masscan's scanning process: initializing the scan, crafting packets for transmission, and processing incoming responses. By operating in user-space, Masscan bypasses the kernel's networking stack, enabling direct control over packet handling and significantly reducing latency.</p>
+        
+        <h3>Reflections on User-Space Networking</h3>
+        <p>The implementation of a user-space TCP/IP stack as demonstrated by Masscan offers profound implications for network scanning and security analysis. It underscores the importance of efficiency and control in handling network packets, particularly for applications requiring high throughput and low latency.</p>
+        
+        <p>In conclusion, the pseudocode provided serves as a conceptual model for understanding the inner workings of Masscan's user-space TCP/IP stack. This exploration highlights the innovative approach Masscan takes to achieve its remarkable scanning speed, offering valuable lessons for developers and security professionals alike.</p>
+    </article>
+    
     
 </section>
 
