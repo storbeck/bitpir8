@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="form-container">
+    <form id="settingsForm" class="game-form">
+      <div class="player-settings">
+        <label for="player1Name">Player 1</label>
+        <input type="text" id="player1Name" value="Player 1" placeholder="Name">
+        <input type="color" id="player1Color" value="#0000FF">
+      </div>
+      <div class="player-settings">
+        <label for="player2Name">Player 2</label>
+        <input type="text" id="player2Name" value="Player 2" placeholder="Name">
+        <input type="color" id="player2Color" value="#FFA500">
+      </div>
+      <div class="maze-settings">
+        <label for="mazeSize">Maze Size</label>
+        <input type="text" id="mazeSize" value="10x10" pattern="\d+x\d+" title="Format: NxM (e.g., 10x10)">
+      </div>
+      <div class="form-buttons">
+        <label>&nbsp;</label>
+        <button type="submit" class="btn">New Game</button>
+      </div>
+    </form>
+  </div>
+  <div class="canvas-container">
+    <canvas id="mazeCanvas"></canvas>
+  </div>
+  <div id="message"></div>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+  <script src="game.js"></script>
+  <script src="storage.js"></script>
+  <script>
+    initializeGameState();
+    loadSettings();
+  </script>
+</body>
+</html>
