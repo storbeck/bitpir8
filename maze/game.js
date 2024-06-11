@@ -72,7 +72,7 @@ window.addEventListener("keydown", (e) => {
 });
 
 async function fetchMaze(size) {
-  const response = await fetch(`http://localhost:8080/maze?size=${size}`);
+  const response = await fetch(`https://8iusfc8n77.execute-api.us-east-1.amazonaws.com/prod/maze?size=${size}`);
   const data = await response.json();
   return data.mazeMap;
 }
