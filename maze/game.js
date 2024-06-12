@@ -44,16 +44,6 @@ document.addEventListener("DOMContentLoaded", function() {
     handleKeydown(e);
   });
 
-  document.getElementById("player1Up").addEventListener("click", () => movePlayer(player1, 0, -1));
-  document.getElementById("player1Down").addEventListener("click", () => movePlayer(player1, 0, 1));
-  document.getElementById("player1Left").addEventListener("click", () => movePlayer(player1, -1, 0));
-  document.getElementById("player1Right").addEventListener("click", () => movePlayer(player1, 1, 0));
-
-  document.getElementById("player2Up").addEventListener("click", () => movePlayer(player2, 0, -1));
-  document.getElementById("player2Down").addEventListener("click", () => movePlayer(player2, 0, 1));
-  document.getElementById("player2Left").addEventListener("click", () => movePlayer(player2, -1, 0));
-  document.getElementById("player2Right").addEventListener("click", () => movePlayer(player2, 1, 0));
-
   async function fetchMaze(size) {
     const response = await fetch(`https://8iusfc8n77.execute-api.us-east-1.amazonaws.com/prod/maze?size=${size}`);
     const data = await response.json();
