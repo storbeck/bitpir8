@@ -27,10 +27,7 @@ document.getElementById("settingsForm").addEventListener("submit", (e) => {
     mazeMap = maze;
     canvas = document.getElementById("mazeCanvas");
     ctx = canvas.getContext("2d");
-    const rows = mazeMap.length;
-    const cols = mazeMap[0].length;
-    canvas.width = cols * cellSize;
-    canvas.height = rows * cellSize;
+    adjustCanvasSize();
     initializePlayerPositions();
     draw();
     document.getElementById("message").style.display = "none"; // Hide message
@@ -38,43 +35,27 @@ document.getElementById("settingsForm").addEventListener("submit", (e) => {
 });
 
 window.addEventListener("keydown", (e) => {
-  switch (e.key) {
-    case "ArrowUp":
-      movePlayer(player1, 0, -1);
-      break;
-    case "ArrowDown":
-      movePlayer(player1, 0, 1);
-      break;
-    case "ArrowLeft":
-      movePlayer(player1, -1, 0);
-      break;
-    case "ArrowRight":
-      movePlayer(player1, 1, 0);
-      break;
-    case "w":
-      movePlayer(player2, 0, -1);
-      break;
-    case "s":
-      movePlayer(player2, 0, 1);
-      break;
-    case "a":
-      movePlayer(player2, -1, 0);
-      break;
-    case "d":
-      movePlayer(player2, 1, 0);
-      break;
-    case "Delete":
-    case "Backspace":
-      // Simulate form submit
-      document.getElementById("settingsForm").dispatchEvent(new Event("submit"));
-      break;
-  }
+  handleKeydown(e);
+});
+
+canvas.addEventListener("touchstart", (e) => {
+  handleTouch(e);
 });
 
 async function fetchMaze(size) {
   const response = await fetch(`https://8iusfc8n77.execute-api.us-east-1.amazonaws.com/prod/maze?size=${size}`);
   const data = await response.json();
   return data.mazeMap;
+}
+
+function adjustCanvasSize() {
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const maxCellSize = Math.min(screenWidth, screenHeight) / Math.max(mazeMap.length, mazeMap[0].length);
+  canvas.width = mazeMap[0].length * maxCellSize;
+  canvas.height = mazeMap.length * maxCellSize;
+  cellSize = maxCellSize;
+  playerSize = cellSize * 0.8;
 }
 
 function initializePlayerPositions() {
@@ -141,6 +122,63 @@ function movePlayer(player, dx, dy) {
         player.endTime = Date.now();
         winGame(player);
       }
+    }
+  }
+}
+
+function handleKeydown(e) {
+  switch (e.key) {
+    case "ArrowUp":
+      movePlayer(player1, 0, -1);
+      break;
+    case "ArrowDown":
+      movePlayer(player1, 0, 1);
+      break;
+    case "ArrowLeft":
+      movePlayer(player1, -1, 0);
+      break;
+    case "ArrowRight":
+      movePlayer(player1, 1, 0);
+      break;
+    case "w":
+      movePlayer(player2, 0, -1);
+      break;
+    case "s":
+      movePlayer(player2, 0, 1);
+      break;
+    case "a":
+      movePlayer(player2, -1, 0);
+      break;
+    case "d":
+      movePlayer(player2, 1, 0);
+      break;
+    case "Delete":
+    case "Backspace":
+      // Simulate form submit
+      document.getElementById("settingsForm").dispatchEvent(new Event("submit"));
+      break;
+  }
+}
+
+function handleTouch(e) {
+  const touch = e.touches[0];
+  const touchX = touch.clientX;
+  const touchY = touch.clientY;
+
+  // Determine which half of the screen the touch event occurred in
+  if (touchX < window.innerWidth / 2) {
+    // Left side of the screen controls player1
+    if (touchY < window.innerHeight / 2) {
+      movePlayer(player1, 0, -1); // Up
+    } else {
+      movePlayer(player1, 0, 1); // Down
+    }
+  } else {
+    // Right side of the screen controls player2
+    if (touchY < window.innerHeight / 2) {
+      movePlayer(player2, 0, -1); // Up
+    } else {
+      movePlayer(player2, 0, 1); // Down
     }
   }
 }
