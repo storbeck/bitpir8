@@ -85,10 +85,10 @@ document.addEventListener("DOMContentLoaded", function() {
     for (let row = 0; row < mazeMap.length; row++) {
       for (let col = 0; col < mazeMap[0].length; col++) {
         if (mazeMap[row][col] === "E") {
-          player1.x = col * cellSize + cellSize / 2;
-          player1.y = row * cellSize + cellSize / 2;
-          player2.x = col * cellSize + cellSize / 2;
-          player2.y = row * cellSize + cellSize / 2;
+          player1.x = col;
+          player1.y = row;
+          player2.x = col;
+          player2.y = row;
           player1.startTime = player2.startTime = Date.now();
           console.log("Player positions initialized: ", player1, player2);
           return;
@@ -122,28 +122,26 @@ document.addEventListener("DOMContentLoaded", function() {
   function drawPlayer(player) {
     ctx.fillStyle = player.color;
     ctx.beginPath();
-    ctx.arc(player.x, player.y, playerSize / 2, 0, Math.PI * 2);
+    ctx.arc(player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2, playerSize / 2, 0, Math.PI * 2);
     ctx.fill();
   }
 
   function movePlayer(player, dx, dy) {
-    const newX = player.x + dx * cellSize;
-    const newY = player.y + dy * cellSize;
-    const col = Math.floor((newX - cellSize / 2) / cellSize);
-    const row = Math.floor((newY - cellSize / 2) / cellSize);
+    const newX = player.x + dx;
+    const newY = player.y + dy;
 
     if (
-      col >= 0 &&
-      col < mazeMap[0].length &&
-      row >= 0 &&
-      row < mazeMap.length &&
-      mazeMap[row][col] !== "█"
+      newX >= 0 &&
+      newX < mazeMap[0].length &&
+      newY >= 0 &&
+      newY < mazeMap.length &&
+      mazeMap[newY][newX] !== "█"
     ) {
-      player.x = col * cellSize + cellSize / 2;
-      player.y = row * cellSize + cellSize / 2;
+      player.x = newX;
+      player.y = newY;
       draw();
 
-      if (mazeMap[row][col] === "X") {
+      if (mazeMap[newY][newX] === "X") {
         player.endTime = Date.now();
         winGame(player);
       }
