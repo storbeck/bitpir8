@@ -9,6 +9,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  -webkit-user-select: none; /* Disable text selection */
+  -ms-user-select: none; /* Disable text selection */
+  user-select: none; /* Disable text selection */
+  touch-action: manipulation; /* Prevent default gestures */
 }
 
 h3 {
