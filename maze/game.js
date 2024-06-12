@@ -139,8 +139,8 @@ document.addEventListener("DOMContentLoaded", function() {
       row < mazeMap.length &&
       mazeMap[row][col] !== "█"
     ) {
-      player.x = newX;
-      player.y = newY;
+      player.x = col * cellSize + cellSize / 2;
+      player.y = row * cellSize + cellSize / 2;
       draw();
 
       if (mazeMap[row][col] === "X") {
