@@ -1,150 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document1</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to My Personal Space</title>
     <style>
-        /* Base settings for a minimal and clean look */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #333;
-            max-width: 800px;
-            margin: auto;
-            padding: 1em;
-        }
-        header, footer {
-            text-align: center;
-            padding: 1em 0;
-        }
-        h1, h2 {
-            color: #005A9C;
-        }
-        a {
-            color: #0066CC;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        nav ul li {
-            margin-bottom: 0.5em;
-        }
-        article {
-            margin-top: 2em;
-            border-top: 2px solid #eee;
-            padding-top: 1em;
-        }
-        pre, code {
-            background-color: #f8f8f8;
-            border: 1px solid #eee;
-            padding: 0.5em;
-            font-family: 'Courier New', monospace;
-            display: block;
-            overflow-x: auto;
-        }
-        time {
-            color: #777;
-        }
+      body {
+        background-color: #00ff00;
+        color: #000000;
+        font-family: "Comic Sans MS", sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        color: #ff0000;
+        font-size: 48px;
+        text-shadow: 2px 2px #000;
+        margin-top: 50px;
+      }
+      p {
+        font-size: 24px;
+      }
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #ffff00;
+        color: #0000ff;
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        border: 5px solid #ff00ff;
+        border-radius: 15px;
+      }
+      a:hover {
+        background-color: #ff00ff;
+        color: #ffffff;
+      }
+      .spinning-gif {
+        margin-top: 30px;
+      }
     </style>
-</head>
-<body>
-
-<header>
-    <h1>Masscan: A Deep Dive</h1>
-</header>
-
-<nav>
-    <ul>
-        <li><a href="#masscan_tcpip_stack_explained">Explaining Masscan's User-Space TCP/IP Stack</a></li>
-        <li><a href="#masscan_pseudocode">Diving Into Pseudocode</a></li>
-    </ul>
-</nav>
-
-<section id="blog-posts">
-    <article id="masscan_tcpip_stack_explained">
-        <header>
-            <h2>Understanding Masscan's User-Space TCP/IP Stack</h2>
-            <p>Posted on <time datetime="2024-04-09">April 9, 2024</time></p>
-        </header>
-        <p>Masscan leverages a user-space TCP/IP stack for its network scanning, setting it apart from traditional tools by avoiding kernel-based networking stack overhead. This technique underpins its capability for rapid, large-scale scans.</p>
-    
-        <h3>Architecture and Design</h3>
-        <p>Operating entirely in user-space allows Masscan to directly manipulate packet data, bypassing the kernel's network stack. This is achieved through raw sockets for packet crafting and sending, alongside custom packet capture logic for receiving responses.</p>
-    
-        <h3>Operation</h3>
-        <ul>
-            <li><strong>Asynchronous I/O:</strong> Masscan uses non-blocking operations to send and receive packets concurrently, utilizing an event-driven model for efficient packet handling.</li>
-            <li><strong>Direct Interface Access:</strong> By interacting directly with network interfaces, Masscan can operate in promiscuous mode, capturing all traffic and filtering for relevant responses.</li>
-            <li><strong>Efficient Packet Filtering:</strong> Custom logic is employed to sift through incoming packets, identifying those pertinent to the scan, ensuring performance efficiency.</li>
-        </ul>
-    
-        <h3>Benefits</h3>
-        <ul>
-            <li><strong>Reduced Latency:</strong> The user-space stack significantly cuts down latency by eliminating kernel stack processing, crucial for high-speed scanning.</li>
-            <li><strong>Enhanced Control and Flexibility:</strong> Direct packet crafting and sending provide unparalleled control over the scanning process, allowing for detailed customization and optimization.</li>
-            <li><strong>Scalability:</strong> The architecture's inherent scalability ensures performance scales linearly with network and hardware capabilities, supporting high packet rates.</li>
-        </ul>
-    
-        <h3>Challenges and Considerations</h3>
-        <p>Despite its advantages, Masscan's user-space operation requires careful resource management and presents compatibility challenges across different platforms and network interfaces. Additionally, security implications and the potential for network disruption necessitate responsible use.</p>
-    
-    </article>
-    <article id="masscan_pseudocode">
-        <header>
-            <h2>Pseudocode: Masscan in Action</h2>
-        </header>
-        <p>The following pseudocode segments offer insight into how Masscan efficiently crafts, sends, and listens for packets, leveraging a user-space stack for unparalleled speed and flexibility in network scanning:</p>
-        
-        <h4>Setting Up the Scanner</h4>
-        <pre><code>
-    function setupScanner(targetIPs, portRange, rate):
-        for each IP in targetIPs:
-            for each port in portRange:
-                schedulePacketSend(IP, port, rate)
-        </code></pre>
-        
-        <h4>Crafting and Sending Packets</h4>
-        <pre><code>
-    function schedulePacketSend(IP, port, rate):
-        while true:
-            wait 1/rate seconds
-            sendPacket(IP, port)
-    
-    function sendPacket(IP, port):
-        packet = createPacket(IP, port)
-        rawSocket.send(packet)
-        log("Packet sent to " + IP + ":" + port)
-    
-    function createPacket(IP, port):
-        packet = new Packet()
-        packet.destinationIP = IP
-        packet.destinationPort = port
-        packet.flags = SYN
-        return packet
-        </code></pre>
-        
-        <h4>Listening for Responses</h4>
-        <pre><code>
-    function listenForResponses():
-        while true:
-            response = rawSocket.receive()
-            if response is not None:
-                if response.flags == SYN-ACK:
-                    log("Port " + response.sourcePort + " on " + response.sourceIP + " is open")
-                else if response.flags == RST:
-                    log("Port " + response.sourcePort + " on " + response.sourceIP + " is closed")
-        </code></pre>
-</section>
-
-<footer>
-    <p>Contact me at <a href="mailto:bit@bitpir8.xyz">bit@bitpir8.xyz</a></p>
-</footer>
-
-</body>
+  </head>
+  <body>
+    <h1>Welcome to My Personal Space</h1>
+    <p>You've found my corner of the web! Enjoy the maze game and have fun!</p>
+    <a href="/maze">Click Here for the Maze Game</a>
+    <div class="spinning-gif">
+      <img
+        src="https://media.giphy.com/media/d31vTpVi1LAcDvdm/giphy.gif"
+        alt="Spinning gif"
+      />
+    </div>
+  </body>
 </html>
